@@ -1,0 +1,9 @@
+DataFrame <- read.table ("C:/Users/HELLO/Documents/Electric-testing.csv" , sep= ",", header = TRUE)
+ControlParameter<-trainControl(method = "cv", number = 5, savePredictions=TRUE, classProbs=TRUE )
+parameterGrid<-expand.grid(mtry=c(2,3,4))
+modelRandom<-train(stabf~., data=trainDf, method="rf", trControl=ControlParameter, tuneGrid=parameterGrid )
+predictions<-predict(modelRandom,testDf)
+t<-table(predictions=predictions,actual=testDf$stabf)
+t
+confusionMatrix(predictions,testDf$stabf)   
+confusionMatrix(predictions,testDf$stabf)
