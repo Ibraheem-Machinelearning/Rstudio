@@ -6,4 +6,4 @@ predictions<-predict(modelRandom,testDf)
 t<-table(predictions=predictions,actual=testDf$stabf)
 t
 confusionMatrix(predictions,testDf$stabf)   
-confusionMatrix(predictions,testDf$stabf)
+
