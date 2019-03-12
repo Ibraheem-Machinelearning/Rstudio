@@ -1,0 +1,26 @@
+DataFrame <- read.table ("C:/Users/HELLO/Documents/Electric-testing.csv" , sep= ",", header = TRUE)
+ind=createDataPartition(DataFrame$stabf,p=2/3,list =FALSE)
+trainDf<-DataFrame[ind,]
+testDf<-DataFrame[-ind,] 
+
+ControlParameter<-trainControl(method = "cv",
+                                           number = 5,
+                                           savePredictions=TRUE,
+                                           classProbs=FALSE
+                                                  )
+                                                  
+parametersGrid <-  expand.grid(eta = 0.1, colsample_bytree=c(0.5,0.7), 
+                           max_depth=c(3,5), nrounds=100, 
+                           gamma=1, min_child_weight=2, 
+                           subsample=1 
+                           )
+modelxgboost <- train(stabf~., data = trainDf, 
+                           metric = "Accuracy", method = "xgbTree",
+                           trControl = ControlParamteres,
+                           tuneGrid=parametersGrid, 
+                           verbose = 1
+                           )
+predictions<-predict(modelxgboost,testDf)
+t<-table(predictions=predictions,actual=testDf$stabf)
+t
+confusionMatrix(predictions,testDf$stabf)
