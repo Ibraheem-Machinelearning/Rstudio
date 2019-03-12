@@ -1,0 +1,9 @@
+DataFrame <- read.table ("C:/Users/HELLO/Documents/Electric-testing.csv" , sep= ",", header = TRUE)
+
+ind=createDataPartition(DataFrame$stabf,p=2/3,list =FALSE)
+trainDf<-DataFrame[ind,]
+testDf<-DataFrame[-ind,] 
+
+modelRandom<-train(stabf~., data=trainDf, method="C5.0", trControl=ControlParameter )
+predictions<-predict(modelRandom,testDf)
+confusionMatrix(predictions,testDf$stabf)
