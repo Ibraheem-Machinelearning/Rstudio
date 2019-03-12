@@ -3,9 +3,19 @@ ind=createDataPartition(DataFrame$stabf,p=2/3,list =FALSE)
 trainDf<-DataFrame[ind,]
 testDf<-DataFrame[-ind,] 
 
-ControlParameter<-trainControl(method = "cv", number = 5, savePredictions=TRUE, classProbs=TRUE )
+ControlParameter<-trainControl(method = "cv", 
+                           number = 5, 
+                           savePredictions=TRUE, 
+                           classProbs=TRUE 
+                           )
 parameterGrid<-expand.grid(mtry=c(2,3,4))
-modelRandom<-train(stabf~., data=trainDf, method="rf", trControl=ControlParameter, tuneGrid=parameterGrid )
+
+modelRandom<-train(stabf~., 
+                   data=trainDf, 
+                   method="rf", 
+                   trControl=ControlParameter,
+                   tuneGrid=parameterGrid )
+
 predictions<-predict(modelRandom,testDf)
 t<-table(predictions=predictions,actual=testDf$stabf)
 t
