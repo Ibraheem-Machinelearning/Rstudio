@@ -1,4 +1,8 @@
 
+DataFrame <- read.table ("C:/Users/HELLO/Documents/Electric-testing.csv" , sep= ",", header = TRUE)
+ind=createDataPartition(DataFrame$stabf,p=2/3,list =FALSE)
+trainDf<-DataFrame[ind,]
+testDf<-DataFrame[-ind,] 
 ControlParameter<-trainControl(method = "cv", number = 5, savePredictions=TRUE, classProbs=TRUE )
 parameterGrid<-expand.grid(mtry=c(2,3,4))
 
