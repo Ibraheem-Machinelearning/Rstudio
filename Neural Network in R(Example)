@@ -1,0 +1,58 @@
+  -----------------------Neural Network-----------------------
+  
+  
+DataFram <- read.table ("C:/Users/HELLO/Documents/Electricdata.csv" , sep= ",", header = TRUE)
+str(DataFram)
+library(MASS)
+library(neuralnet)
+install.packages("neuralnet")
+install.packages("MASS")
+set.seed(12345)
+
+hist(DataFram$stabf,col=colors()[100:110],breaks=10,main = "Histogram for Stabf",xlab = "stabf")
+dim(DataFram)
+head(DataFram,3)
+
+apply(DataFram,2,range)
+maxValue <- apply(DataFram, 2, max)
+minValue <- apply(DataFram, 2, min)
+DataFram<-as.data.frame(scale(DataFram,center = minValue,
+                               scale =maxValue-minValue))
+
+ind<-sample(1:nrow(DataFram),7000)
+trainDF<-DataFram[ind,] 
+testDF<-DataFram[-ind,]
+
+allVars<-colnames(DataFram)
+predictorVars<-allVars[!allVars%in%"stabf"]
+
+predictorVars<-paste(predictorVars,collapse = "+")
+
+form=as.formula(paste("stabf~",predictorVars,collapse = "+")) 
+
+neuralModel<-neuralnet(formula =form,hidden = c(10,3),linear.output = F,
+                       data =trainDF,stepmax = 1e6)
+
+
+plot(neuralModel)
+
+predict <- compute(neuralModel,testDF[,1:12])
+
+str(predict)
+
+
+
+predict1 <- predict$net.result*(max(testDF$stabf)-min(testDF$stabf))+
+  min(testDF$stabf)
+
+actualValues <- (testDF$stabf)*(max(testDF$stabf)-min(testDF$stabf))+min(testDF$stabf)
+
+MSE <- sum((predict1 - actualValues)^2)/nrow(testDF)
+MSE
+
+
+
+
+plot(testDF$stabf,predict1,col='blue',main='Real vs Predicted',pch=1,cex=1,type = "p",xlab = "Actual",ylab = "Predicted")
+
+accuracy <- postResample(testDF$stabf, predict)
