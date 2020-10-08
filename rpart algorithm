@@ -20,3 +20,4 @@ predictions<-predict(algopart,testDf)
 t<-table(predictions=predictions,actual=testDf$stabf)
 t
 
+t
